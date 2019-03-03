@@ -20,7 +20,9 @@ def read_data(mylist=[], *test_cases):
 
                 while next_tb is not None and len(next_tb.find_all( 'h3', attrs={'class':'formtitle'} )) == 0:
                     if [td for td in next_tb.find_all('b') if td.text == 'Zephyr Teststep:']:
-                        result.update(get_test_case_detail(next_tb))
+                        for index, label_name in enumerate(next_tb.find_all('td')):
+                            if label_name.text == 'Zephyr Teststep:':
+                                result.update(get_test_case_detail(next_tb, index))
                     if next_tb.find_all( 'td', attrs={'id': 'descriptionArea'}):
                         result.update(get_descriptioin(next_tb))
                     next_tb = next_tb.find_next('table')       
@@ -41,8 +43,8 @@ def get_title( test_case_table, title_number ):
 def get_descriptioin( description_table ):
     return {'Description': bef_text(description_table.text.strip())}
 
-def get_test_case_detail( test_case_table ):
-    test_case_table = test_case_table.find_all("td")[1]
+def get_test_case_detail( test_case_table, label_name_index ):    
+    test_case_table = test_case_table.find_all("td")[label_name_index+1]
     get_tags = test_case_table.find_all("td")
     get_body = test_case_table.find_next("tbody")
     all_tags = get_body.find_all("tr")
@@ -83,3 +85,14 @@ def write_in_csv_file(alist):
         writer.writeheader()
         for x in range(len(alist)):
             writer.writerow(alist[x])
+
+# read_data(['7142', '7141', '7140', '7094', '5262', '2555', '14745'])
+# read_data(['5331'])  #lots steps
+# read_data(['5343'])
+# 5343
+# read_data(['14745'])
+# read_data(['7140'])  #no description
+# read_data(['7196'])
+# read_data(['7096'])
+# read_data(['2555'])
+# read_data(['15373', '14747', '7208'])

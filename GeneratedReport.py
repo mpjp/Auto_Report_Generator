@@ -38,6 +38,7 @@ def guiGenerated():
         global test_cases
         print(*test_cases)
         test_cases.sort()
+        test_cases.sort(key=int)
         try:
             writeFile.read_data(test_cases)
             messagebox.showinfo("DONE", "DONE. The csv file is in the folder.")
